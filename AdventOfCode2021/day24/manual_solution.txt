@@ -1,0 +1,347 @@
+---------round 1---------
+inp w           w = w1
+mul x 0
+add x z
+mod x 26        x = 0
+div z 1         z = 0
+add x 13        x = 13
+eql x w
+eql x 0         != w1  => x = 0 ... 0 == 0  =>  x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = 0
+mul y 0
+add y w
+add y 13
+mul y x         y = w1 + 13
+add z y         z = w1 + 13
+
+---------round 2---------
+inp w           w = w2
+mul x 0
+add x z
+mod x 26        x = w1 + 13
+div z 1
+add x 11        x = w1 + 24
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = (w1 + 13) * 26
+mul y 0
+add y w
+add y 10
+mul y x         y = w2 + 10
+add z y         z = (w1 + 13) * 26 + w2 + 10
+
+---------round 3---------
+inp w           w = w3
+mul x 0
+add x z
+mod x 26        x = w2 + 10
+div z 1
+add x 15        x = w2 + 25
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = [(w1 + 13) * 26 + w2 + 10] * 26
+mul y 0
+add y w
+add y 5
+mul y x         y = w3 + 5
+add z y         z = [(w1 + 13) * 26 + w2 + 10] * 26 + w3 + 5
+
+---------round 4---------
+inp w           w = w4
+mul x 0
+add x z
+mod x 26        x = w3 + 5
+div z 26        z = (w1 + 13) * 26 + w2 + 10
+add x -11       x = w3 - 6
+eql x w
+eql x 0
+                1 option:   x != w  =>  x = 1
+                2 option:   x == w  =>  x = 0
+
+mul y 0
+add y 25
+mul y x
+add y 1
+                y = 26
+                y = 1
+mul z y
+                z = [(w1 + 13) * 26 + w2 + 10] * 26
+                z = (w1 + 13) * 26 + w2 + 10
+mul y 0
+add y w
+add y 14
+mul y x
+                y = (w4 + 14) * 1
+                y = (w4 + 14) * 0 = 0
+add z y
+                z = [(w1 + 13) * 26 + w2 + 10] * 26 + w4 + 14
+          =>    z = (w1 + 13) * 26 + w2 + 10
+
+                line 70 has to be x = 0
+                w4 = w3 - 6
+                w4 = w3 + (-6)
+                number (- 6) is affected by:
+                        round 3 command add y 5
+                        round 4 command x - 11
+                
+                possible combinations:
+                w3 = 9 8 7
+                w4 = 3 2 1 
+
+                for puzzle 1 we need the highest numbers
+                w3 = 9
+                w4 = 3
+
+                difference = 5 + (-11) = -6
+                we can say that one w number will be 9 and
+                second w number will be 9 - 6
+                
+                if difference < 0:
+                        w3 = 9 a w4 = 9 + difference
+                else:
+                        w4 = 9 a w3 = 9 - difference
+
+---------round 5----------- 
+
+inp w           w = w5
+mul x 0
+add x z
+mod x 26        x = w2 + 10
+div z 1
+add x 14        x = w2 + 24
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = [(w1 + 13) * 26 + w2 + 10] * 26
+mul y 0
+add y w
+add y 5
+mul y x         y = w5 + 5
+add z y         z = [(w1 + 13) * 26 + w2 + 10] * 26 + w5 + 5
+
+---------round 6-------------
+inp w           w = w6
+mul x 0
+add x z
+mod x 26        x = w5 + 5
+div z 26        z = (w1 + 13) * 26 + w2 + 10
+add x 0         x = w5 + 5
+eql x w         w6 = w5 + 5
+eql x 0         x = 0
+                w5 = 4 3 2 1
+                w6 = 9 8 7 6
+                => w5 = 4, w6 = 9
+
+                number +5 is affected by:
+                        round 5 command add y 5
+                        round 6 command add x 0
+                diff = 5 + 0
+
+                w5 => minimum from (9, 9 - difference) = 4
+                w6 => minimum from (9, 9 + difference) = 9
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = (w1 + 13) * 26 + w2 + 10
+mul y 0
+add y w
+add y 15        y = w6 + 15
+mul y x         y = 0
+add z y         z = (w1 + 13) * 26 + w2 + 10
+
+---------round 7-------------
+
+inp w           w = w7
+mul x 0
+add x z
+mod x 26        x = w6 + 15
+div z 1
+add x 12        x = w6 + 27
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = [(w1 + 13) * 26 + w2 + 10] * 26
+mul y 0
+add y w
+add y 4
+mul y x         y = w7 + 4
+add z y         z = [(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4
+
+---------round 8--------------
+inp w           w = w8
+mul x 0
+add x z
+mod x 26        x = w7 + 4
+div z 1
+add x 12        x = w7 + 16
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = {[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26
+mul y 0
+add y w
+add y 11
+mul y x         y = w8 + 11
+add z y         z = {[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11
+
+---------round 9-------------
+
+inp w           w = w9
+mul x 0
+add x z
+mod x 26        x = w8 + 11
+div z 1
+add x 14        x = w8 + 25
+eql x w
+eql x 0         x = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 26
+mul z y         z = ({[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11) * 26
+mul y 0
+add y w
+add y 1
+mul y x         y = w9 + 1
+add z y         z = ({[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11) * 26 + w9 + 1
+
+---------round 10---------
+inp w           w = w10
+mul x 0
+add x z
+mod x 26        x = w9 + 1
+div z 26        z = {[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11
+add x -6        x = w9 - 5
+eql x w
+eql x 0         x = 0
+                pro w10 = w9 - 5
+                w9  = 9 8 7 6
+                w10 = 4 3 2 1
+                w9 = 9, w10 = 4
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = {[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11
+mul y 0
+add y w
+add y 15
+mul y x         y = 0
+add z y         z = {[(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4} * 26 + w8 + 11
+
+---------round 11---------
+inp w           w = w11
+mul x 0
+add x z
+mod x 26        x = w8 + 11
+div z 26        z = [(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4
+add x -10       x = w8 + 1
+eql x w
+eql x 0         x = 0
+                pro w11 = w8 + 1
+                w8  = 8 7 6 5 4 3 2 1
+                w11 = 9 8 7 6 5 4 3 2
+                w8 = 8
+                w11 = 9
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = [(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4      
+mul y 0
+add y w
+add y 12
+mul y x         y = 0
+add z y         z = [(w1 + 13) * 26 + w2 + 10] * 26 + w7 + 4
+
+---------round 12---------
+inp w           w = w12
+mul x 0
+add x z
+mod x 26        x = w7 + 4  
+div z 26        z = (w1 + 13) * 26 + w2 + 10  
+add x -12       x = w7 - 8
+eql x w
+eql x 0         x = 0
+                w12 = w7 - 8
+                w7  = 9
+                w12 = 1
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = (w1 + 13) * 26 + w2 + 10  
+mul y 0
+add y w
+add y 8
+mul y x         y = 0
+add z y         z = (w1 + 13) * 26 + w2 + 10
+
+---------round 13---------
+inp w           w = w13
+mul x 0
+add x z
+mod x 26        x = w2 + 10
+div z 26        z = w1 + 13
+add x -3        x = w2 + 7
+eql x w
+eql x 0         x = 0
+                w13 = w2 + 7
+                w2  = 1 2
+                w13 = 8 9
+                w2 = 2, w13 = 9
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = w1 + 13
+mul y 0
+add y w
+add y 14
+mul y x         y = 0
+add z y         z = w1 + 13
+
+---------round 14---------
+inp w           w = w14
+mul x 0
+add x z
+mod x 26        x = w1 + 13
+div z 26        z = 0
+add x -5        x = w1 + 8
+eql x w
+eql x 0         x = 0
+                w14 = w1 + 8
+                w1  = 1
+                w14 = 9
+mul y 0
+add y 25
+mul y x
+add y 1         y = 1
+mul z y         z = 0
+mul y 0
+add y w
+add y 9
+mul y x         y = 0
+add z y         z = 0
