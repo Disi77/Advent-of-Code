@@ -3,67 +3,55 @@ from pathlib import Path
 
 def tree_is_visible(i, j, rows):
     tree = rows[i][j]
-    row_count = len(rows)
-    col_count = len(rows[0])
 
-    is_higher = [False, False, False, False]
+    is_higher = 0
     # up
     for row in range(i - 1, -1, -1):
         if tree <= rows[row][j]:
-            is_higher[0] = True
+            is_higher += 1
             break
     # down
-    for row in range(i + 1, row_count):
+    for row in range(i + 1, len(rows)):
         if tree <= rows[row][j]:
-            is_higher[1] = True
+            is_higher += 1
             break
     # left
     for col in range(j - 1, -1, -1):
         if tree <= rows[i][col]:
-            is_higher[2] = True
+            is_higher += 1
             break
     # right
-    for col in range(j + 1, col_count):
+    for col in range(j + 1, len(rows[0])):
         if tree <= rows[i][col]:
-            is_higher[3] = True
+            is_higher += 1
             break
 
-    return sum(is_higher) < 4
+    return is_higher < 4
 
 
 def scenic_score(i, j, rows):
     tree = rows[i][j]
-    row_count = len(rows)
-    col_count = len(rows[0].strip())
 
     score = [0, 0, 0, 0]
     # up
     for row in range(i - 1, -1, -1):
-        if tree > rows[row][j]:
-            score[0] += 1
-        elif tree <= rows[row][j]:
-            score[0] += 1
+        score[0] += 1
+        if tree <= rows[row][j]:
             break
     # down
-    for row in range(i + 1, row_count):
-        if tree > rows[row][j]:
-            score[1] += 1
-        elif tree <= rows[row][j]:
-            score[1] += 1
+    for row in range(i + 1, len(rows)):
+        score[1] += 1
+        if tree <= rows[row][j]:
             break
     # left
     for col in range(j - 1, -1, -1):
-        if tree > rows[i][col]:
-            score[2] += 1
-        elif tree <= rows[i][col]:
-            score[2] += 1
+        score[2] += 1
+        if tree <= rows[i][col]:
             break
     # right
-    for col in range(j + 1, col_count):
-        if tree > rows[i][col]:
-            score[3] += 1
-        elif tree <= rows[i][col]:
-            score[3] += 1
+    for col in range(j + 1, len(rows[0].strip())):
+        score[3] += 1
+        if tree <= rows[i][col]:
             break
     return score[0] * score[1] * score[2] * score[3]
 
