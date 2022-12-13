@@ -1,11 +1,11 @@
 from pathlib import Path
 
 
-def puzzle_solution(instructions, snake, positions):
+def puzzle_solution(instructions, snake, history):
     for i in instructions:
         direction, steps = i.split()
         steps = int(steps)
-        for step in range(steps):
+        for _ in range(steps):
             x0, y0 = snake[0]
             if direction == "R":
                 x0 += 1
@@ -30,7 +30,7 @@ def puzzle_solution(instructions, snake, positions):
                     x1, y1 = x1 - koef_x, y1 - koef_y
                 snake[index] = (x1, y1)
                 x0, y0 = x1, y1
-                positions.add(snake[-1])
+                history.add(snake[-1])
 
 
 here = Path(__file__).parent
@@ -38,12 +38,12 @@ instructions = Path(here / "input.txt").read_text().split("\n")
 
 
 snake = [(0, 0), (0, 0)]
-positions = set()
-puzzle_solution(instructions, snake, positions)
-print("Puzzle 1 =", len(positions))
+history = set()
+puzzle_solution(instructions, snake, history)
+print("Puzzle 1 =", len(history))
 
 
 snake = [(0, 0) for _ in range(10)]
-positions = set()
-puzzle_solution(instructions, snake, positions)
-print("Puzzle 2 =", len(positions))
+history = set()
+puzzle_solution(instructions, snake, history)
+print("Puzzle 2 =", len(history))
