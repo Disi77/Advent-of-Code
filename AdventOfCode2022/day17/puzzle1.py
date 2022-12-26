@@ -1,0 +1,163 @@
+from pathlib import Path
+from os import system, name
+from time import sleep
+from termcolor import colored
+from itertools import cycle
+
+
+def clear():
+    if name == "nt":
+        system("cls")
+    else:
+        system("clear")
+
+
+def calculate_tower_height(tower):
+    height = 0
+    for item in tower:
+        if item[1] > height:
+            height = item[1]
+        
+    return height
+
+
+def draw_chamber(tower, rock, rocks_count, sleep_time):
+    sleep(sleep_time)
+    clear()
+
+    if not rock:
+        rock = set()
+    
+    tower_height = calculate_tower_height(tower)
+    y_from = max(tower_height + 6, 20)
+    y_to = max(0, y_from - 20)
+
+    print("  lvl" + 9 *" " + "units")
+    for y in range(y_from, y_to - 1, -1):
+        if y % 10 == 0:
+            print(f"{y: 5d}", end="")
+        else:
+            print(5 * " ", end="")
+        if y == 0:
+            print("+", end="")
+        else:
+            print("|", end="")
+        for x in range(7):
+            if y == 0:
+                print("-", end="")
+            elif (x, y) in tower:
+                print(colored("#", "green"), end="")
+            elif (x, y) in rock:
+                print(colored("@", "yellow"), end="")
+            else:
+                print(".", end="")
+        if y == 0:
+            print("+", end="")
+        else:
+            print("|", end="")
+        if y % 10 == 0:
+            print(rocks_count)
+        else:
+            print()
+
+
+def create_rock(rocks_counter, tower):
+    rocks = {"-": set([(0, 0), (1, 0), (2, 0), (3, 0)]),
+             "+": set([(0, 0), (1, 0), (2, 0), (1, -1), (1, 1)]),
+             "┘": set([(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)]),
+             "|": set([(0, 0), (0, 1), (0, 2), (0, 3)]),
+             "□": set([(0, 0), (1, 0), (0, 1), (1, 1)])
+             }
+    rocks_types_list = list(rocks.keys())
+    rock_type = rocks_types_list[rocks_counter % len(rocks_types_list)]
+
+    entry_point = get_rock_entry_point(tower)
+    if rock_type == "+":
+        x, y = entry_point
+        entry_point = (x, y + 1)
+    rock = set()
+    for (x, y) in rocks[rock_type]:
+        rock.add((x + entry_point[0], y + entry_point[1]))
+    return rock
+
+
+def get_rock_entry_point(tower):
+    return 2, calculate_tower_height(tower) + 4
+
+
+def move_rock_right(rock, tower):
+    try:
+        new_rock = set()
+        for (x, y) in rock:
+            x = x + 1
+            if x > 6:
+                raise IndexError
+            if (x, y) in tower:
+                raise IndexError
+            new_rock.add((x, y))
+        return new_rock
+    except IndexError:
+        return rock
+
+
+def move_rock_left(rock, tower):
+    try:
+        new_rock = set()
+        for (x, y) in rock:
+            x = x - 1
+            if x < 0:
+                raise IndexError
+            if (x, y) in tower:
+                raise IndexError
+            new_rock.add((x, y))
+        return new_rock
+    except IndexError:
+        return rock
+
+
+def move_rock_down(rock, tower):
+    try:
+        new_rock = set()
+        for (x, y) in rock:
+            y = y - 1
+            if y == 0:
+                raise IndexError
+            if (x, y) in tower:
+                raise IndexError
+            new_rock.add((x, y))
+        return new_rock
+    except IndexError:
+        for item in rock:
+            tower.add(item)
+        return None
+
+
+here = Path(__file__).parent
+instructions = Path(here / "input.txt").read_text()
+instructions = cycle(instructions)
+
+rocks_final_count = 2022
+rock_counter = 0
+tower = set()
+rock = None
+
+while True:
+    direction = next(instructions)
+    if not rock:
+        rock = create_rock(rock_counter, tower)
+        rock_counter += 1
+
+    if rock_counter == rocks_final_count + 1:
+        break
+
+    # draw_chamber(tower, rock, rock_counter, 0.05)
+
+    if direction == ">":
+        rock = move_rock_right(rock, tower)
+    if direction == "<":
+        rock = move_rock_left(rock, tower)
+    
+    rock = move_rock_down(rock, tower)   
+
+
+print("Puzzle 1 =", calculate_tower_height(tower))
