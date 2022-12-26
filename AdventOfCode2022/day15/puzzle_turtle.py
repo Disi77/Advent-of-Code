@@ -112,7 +112,10 @@ for i in instructions:
 
 
 # Grid
+t.tracer(False)
 draw_grid()
+t.update()
+t.tracer(True)
 
 # Sensors, Beacons, Diamonds
 for sx, sy, bx, by in devices:
