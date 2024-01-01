@@ -1,2 +1,3 @@
 .vscode/
-templates
+templates/
+venv/
