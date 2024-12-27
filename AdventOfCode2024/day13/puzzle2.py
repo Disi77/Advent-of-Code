@@ -6,7 +6,7 @@ path = "AdventOfCode2024/day13/input.txt"
 with open(path, encoding="utf-8", mode="r") as raw_data:
     machine_instructions = raw_data.read().split("\n\n")
 
-# Puzzle 1
+# Puzzle 2
 pattern = "\d+"
 a, b = symbols("a,b")
 
